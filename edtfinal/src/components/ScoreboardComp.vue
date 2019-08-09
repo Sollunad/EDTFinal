@@ -14,7 +14,7 @@
                 </ScoreboardSongComp>
             </v-flex>
             <v-flex xs4>
-                <CurrentVoteComp v-if="voted > 0" :vote="votes[voted - 1]" :songs="songs"></CurrentVoteComp>
+                <CurrentVoteComp v-if="voted > 0" :vote="votes[voted - 1]" :songs="songs" :scoreKey="scoreKey"></CurrentVoteComp>
                 <v-btn @click="nextVote" class="nextButton">Next Vote</v-btn>
                 <div>{{voted}} of {{votes.length}} votes counted</div>
             </v-flex>
