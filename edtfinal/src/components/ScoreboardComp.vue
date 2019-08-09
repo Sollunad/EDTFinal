@@ -15,8 +15,11 @@
             </v-flex>
             <v-flex xs4>
                 <CurrentVoteComp v-if="voted > 0" :vote="votes[voted - 1]" :songs="songs" :scoreKey="scoreKey"></CurrentVoteComp>
-                <v-btn @click="nextVote" class="nextButton">Next Vote</v-btn>
-                <div>{{voted}} of {{votes.length}} votes counted</div>
+                <v-btn @click="nextVote" v-if="voted < votes.length" class="nextButton">Next Vote</v-btn>
+                <div v-if="voted > 0" class="votingStatus">
+                    <di>{{voted}} of {{votes.length}} redditors voting</di>
+                    <v-progress-linear :value="voted / votes.length * 100"></v-progress-linear>
+                </div>
             </v-flex>
         </v-layout>
     </div>
@@ -64,7 +67,9 @@
                 {order: 32, performer: 'KEiiNO', song: 'Spirit In The Sky', points: 0, country: 'no'},
             ],
             votes: [
-                [24, 27, 3, 2, 1, 9, 32, 18, 15, 12, 'Sollunad']
+                [24, 27, 3, 2, 1, 9, 32, 18, 15, 12, 'Sollunad'],
+                [24, 13, 30, 17, 5, 2, 3, 1, 4, 6, 'Voter 2'],
+                [27, 30, 32, 2, 1, 9, 32, 18, 15, 12, 'Voter 3']
             ],
             scoreKey: [12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
             voted: 0
@@ -111,5 +116,10 @@
 <style scoped>
     .nextButton {
         margin: 10px 10px 10px 0;
+    }
+
+    .votingStatus {
+        margin: 10px;
+        text-align: center;
     }
 </style>

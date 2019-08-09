@@ -33,7 +33,7 @@
         methods: {
             renderSingleVote: function(vote) {
                 const song = this.songs.find(s => s.order === vote);
-                return `${song.performer} - ${song.song}`;
+                return `${song.song}`;
             }
         }
     }
