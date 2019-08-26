@@ -4,22 +4,28 @@
             <v-flex xs4>
                 <ScoreboardSongComp v-for="entry in scoreboardLeftHalf"
                                     :key="entry.order"
-                                    :entry="entry">
+                                    :entry="entry"
+                                    :vote="currentVote"
+                                    :scoreKey="scoreKey">
                 </ScoreboardSongComp>
             </v-flex>
             <v-flex xs4>
                 <ScoreboardSongComp v-for="entry in scoreboardRightHalf"
                                     :key="entry.order"
-                                    :entry="entry">
+                                    :entry="entry"
+                                    :vote="currentVote"
+                                    :scoreKey="scoreKey">
                 </ScoreboardSongComp>
             </v-flex>
             <v-flex xs4>
-                <v-btn @click="nextVote" v-if="voted < votes.length" class="nextButton">Next Vote</v-btn>
-                <CurrentVoteComp v-if="voted > 0" :vote="votes[voted - 1]" :songs="songs" :scoreKey="scoreKey"></CurrentVoteComp>
-                <div v-if="voted > 0" class="votingStatus">
+                <CurrentVoteComp :vote="currentVote" :songs="songs" :scoreKey="scoreKey" v-on:next="nextVote"></CurrentVoteComp>
+                <div class="votingStatus">
                     <di>{{voted}} of {{votes.length}} redditors voting</di>
                     <v-progress-linear :value="voted / votes.length * 100"></v-progress-linear>
                 </div>
+                <v-btn @click="nextVote" v-if="voted < votes.length" class="nextButton">Next Vote</v-btn>
+                <v-btn @click="lastVote" v-if="voted > 0" class="nextButton">Last Vote</v-btn>
+                <v-btn @click="reset" v-if="voted > 0" class="nextButton">Reset</v-btn>
             </v-flex>
         </v-layout>
     </div>
@@ -82,6 +88,10 @@
             scoreboardRightHalf: function() {
                 const songCount = this.songs.length;
                 return this.songs.slice(songCount / 2);
+            },
+            currentVote: function() {
+                if (this.voted === 0) return null;
+                else return this.votes[this.voted - 1];
             }
         },
         methods: {
@@ -95,15 +105,33 @@
                     return b.points - a.points;
                 }
             },
+            lastVote: function() {
+                if (this.voted > 0) {
+                    this.setToVote(this.voted - 1);
+                }
+            },
             nextVote: function() {
                 if (this.voted < this.votes.length) {
-                    const vote = this.votes[this.voted];
-                    for (let i = 0; i < 10; i++) {
-                        const pickedSong = this.songs.find(s => s.order === vote[i]);
-                        pickedSong.points += this.scoreKey[i];
+                    this.setToVote(this.voted + 1);
+                }
+            },
+            reset: function() {
+                this.setToVote(0);
+            },
+            setToVote: function(vote) {
+                if (vote >= 0 && vote <= this.votes.length) {
+                    this.voted = vote;
+                    for (const song of this.songs) {
+                        song.points = 0;
+                    }
+                    for (let v = 0; v < vote; v++) {
+                        const vote = this.votes[v];
+                        for (let i = 0; i < 10; i++) {
+                            const pickedSong = this.songs.find(s => s.order === vote[i]);
+                            pickedSong.points += this.scoreKey[i];
+                        }
                     }
                     this.orderSongs();
-                    this.voted++;
                 }
             }
         },
