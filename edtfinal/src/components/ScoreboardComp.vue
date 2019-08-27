@@ -41,12 +41,12 @@
             songs: [
                 {order: 1, performer: 'Francesco Gabbani', song: 'Occidentali\'s Karma', points: 0, country: 'it'},
                 {order: 2, performer: 'maNga', song: 'We Could Be The Same', points: 0, country: 'tr'},
-                {order: 3, performer: 'Lena', song: 'Satellite', points: 0, country: 'de'},
-                {order: 4, performer: 'Jamala', song: '1944', points: 0, country: 'ua'},
-                {order: 5, performer: 'Aminata', song: 'Love Injected', points: 0, country: 'lv'},
-                {order: 6, performer: 'Conchita Wurst', song: 'Rise Like a Phoenix', points: 0, country: 'at'},
-                {order: 7, performer: 'Sunstroke Project', song: 'Hey Mamma', points: 0, country: 'md'},
-                {order: 8, performer: 'Kristian Kostov', song: 'Beautiful Mess', points: 0, country: 'bg'},
+                {order: 3, performer: 'Aminata', song: 'Love Injected', points: 0, country: 'lv'},
+                {order: 4, performer: 'Lena', song: 'Satellite', points: 0, country: 'de'},
+                {order: 5, performer: 'Kristian Kostov', song: 'Beautiful Mess', points: 0, country: 'bg'},
+                {order: 6, performer: 'Sunstroke Project', song: 'Hey Mamma', points: 0, country: 'md'},
+                {order: 7, performer: 'Jamala', song: '1944', points: 0, country: 'ua'},
+                {order: 8, performer: 'Conchita Wurst', song: 'Rise Like a Phoenix', points: 0, country: 'at'},
                 {order: 9, performer: 'KEiiNO', song: 'Spirit In The Sky', points: 0, country: 'no'},
                 {order: 10, performer: 'Dami Im', song: 'Sound Of Silence', points: 0, country: 'au'},
                 {order: 11, performer: 'Kate Miller-Heidke', song: 'Zero Gravity', points: 0, country: 'au'},
@@ -75,7 +75,8 @@
             votes: [
                 [24, 27, 3, 2, 1, 9, 32, 18, 15, 12, 'Sollunad'],
                 [24, 13, 30, 17, 5, 2, 3, 1, 4, 6, 'Voter 2'],
-                [27, 30, 32, 2, 1, 9, 32, 18, 15, 12, 'Voter 3']
+                [27, 30, 32, 2, 1, 9, 32, 18, 15, 12, 'Voter 3'],
+                [32, 25, 30, 28, 31, 9, 2, 18, 15, 12, 'Voter 4']
             ],
             scoreKey: [12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
             voted: 0
