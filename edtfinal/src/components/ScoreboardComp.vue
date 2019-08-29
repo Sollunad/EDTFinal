@@ -20,12 +20,18 @@
             <v-flex xs4>
                 <CurrentVoteComp :vote="currentVote" :songs="songs" :scoreKey="scoreKey" v-on:next="nextVote"></CurrentVoteComp>
                 <div class="votingStatus">
-                    <di>{{voted}} of {{votes.length}} redditors voting</di>
-                    <v-progress-linear :value="voted / votes.length * 100"></v-progress-linear>
+                    <div>{{voted}} of {{votes.length}} redditors voting</div>
+                    <v-slider
+                        v-model="voted"
+                        min="0"
+                        :max="votes.length">
+                    </v-slider>
                 </div>
-                <v-btn @click="nextVote" v-if="voted < votes.length" class="nextButton">Next Vote</v-btn>
-                <v-btn @click="lastVote" v-if="voted > 0" class="nextButton">Last Vote</v-btn>
-                <v-btn @click="reset" v-if="voted > 0" class="nextButton">Reset</v-btn>
+                <div>
+                    <v-btn @click="nextVote" color="info" :disabled="voted === votes.length" class="nextButton">Next Vote</v-btn>
+                    <v-btn @click="lastVote" color="info" :disabled="voted === 0" class="nextButton">Last Vote</v-btn>
+                    <v-btn @click="reset" color="error" :disabled="voted === 0" class="nextButton">Reset</v-btn>
+                </div>
             </v-flex>
         </v-layout>
     </div>
@@ -79,7 +85,7 @@
                 [32, 25, 30, 28, 31, 9, 2, 18, 15, 12, 'Voter 4']
             ],
             scoreKey: [12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
-            voted: 0
+            voted: 0,
         }),
         computed: {
             scoreboardLeftHalf: function() {
@@ -108,20 +114,19 @@
             },
             lastVote: function() {
                 if (this.voted > 0) {
-                    this.setToVote(this.voted - 1);
+                    this.voted--;
                 }
             },
             nextVote: function() {
                 if (this.voted < this.votes.length) {
-                    this.setToVote(this.voted + 1);
+                    this.voted++;
                 }
             },
             reset: function() {
-                this.setToVote(0);
+                this.voted = 0;
             },
             setToVote: function(vote) {
                 if (vote >= 0 && vote <= this.votes.length) {
-                    this.voted = vote;
                     for (const song of this.songs) {
                         song.points = 0;
                     }
@@ -138,6 +143,11 @@
         },
         created: function() {
             this.orderSongs();
+        },
+        watch: {
+            voted: function() {
+                this.setToVote(this.voted);
+            }
         }
     }
 </script>
