@@ -20,17 +20,17 @@
             <v-flex xs4>
                 <CurrentVoteComp :vote="currentVote" :songs="songs" :scoreKey="scoreKey" v-on:next="nextVote"></CurrentVoteComp>
                 <div class="votingStatus">
-                    <div>{{voted}} of {{votes.length}} redditors voting</div>
+                    <div>{{voted}} of {{songCount}} redditors voting</div>
                     <v-slider
                         v-model="voted"
                         min="0"
-                        :max="votes.length">
+                        :max="songCount">
                     </v-slider>
                 </div>
                 <div>
-                    <v-btn @click="nextVote" color="info" :disabled="voted === votes.length" class="nextButton">Next Vote</v-btn>
-                    <v-btn @click="lastVote" color="info" :disabled="voted === 0" class="nextButton">Last Vote</v-btn>
-                    <v-btn @click="reset" color="error" :disabled="voted === 0" class="nextButton">Reset</v-btn>
+                    <v-btn @click="nextVote" color="info" :disabled="voted === songCount" class="button">Next Vote</v-btn>
+                    <v-btn @click="lastVote" color="info" :disabled="voted === 0" class="button">Last Vote</v-btn>
+                    <v-btn @click="reset" color="error" :disabled="voted === 0" class="button">Reset</v-btn>
                 </div>
             </v-flex>
         </v-layout>
@@ -54,13 +54,14 @@
             voted: 0,
         }),
         computed: {
+            songCount: function() {
+                return this.songs.length;
+            },
             scoreboardLeftHalf: function() {
-                const songCount = this.songs.length;
-                return this.songs.slice(0, songCount / 2);
+                return this.songs.slice(0, this.songCount / 2);
             },
             scoreboardRightHalf: function() {
-                const songCount = this.songs.length;
-                return this.songs.slice(songCount / 2);
+                return this.songs.slice(this.songCount / 2);
             },
             currentVote: function() {
                 if (this.voted === 0) return null;
@@ -68,14 +69,9 @@
             }
         },
         methods: {
-            orderSongs: function() {
-                this.songs.sort(this.compareSongs);
-            },
-            compareSongs: function(a,b) {
-                if (a.points === b.points) {
-                    return a.order - b.order;
-                } else {
-                    return b.points - a.points;
+            nextVote: function() {
+                if (this.voted < this.songCount) {
+                    this.voted++;
                 }
             },
             lastVote: function() {
@@ -83,45 +79,52 @@
                     this.voted--;
                 }
             },
-            nextVote: function() {
-                if (this.voted < this.votes.length) {
-                    this.voted++;
-                }
-            },
             reset: function() {
                 this.voted = 0;
             },
-            setToVote: function(vote) {
-                if (vote >= 0 && vote <= this.votes.length) {
-                    for (const song of this.songs) {
-                        song.points = 0;
-                    }
-                    for (let v = 0; v < vote; v++) {
-                        const vote = this.votes[v];
-                        for (let i = 0; i < 10; i++) {
-                            const pickedSong = this.songs.find(s => s.order === vote[i]);
-                            pickedSong.points += this.scoreKey[i];
-                        }
-                    }
-                    this.orderSongs();
+            calculatePoints: function() {
+                for (const song of this.songs) {
+                    song.points = 0;
                 }
-            }
+                for (let v = 0; v < this.voted; v++) {
+                    const vote = this.votes[v];
+                    for (let i = 0; i < 10; i++) {
+                        const pickedSong = this.songs.find(s => s.order === vote[i]);
+                        pickedSong.points += this.scoreKey[i];
+                    }
+                }
+                this.orderSongs();
+            },
+            orderSongs: function() {
+                this.songs.sort(this.compareSongs);
+            },
+            compareSongs: function(a, b) {
+                /*
+                    Order songs in descending order by their score.
+                    If two songs have the same score, the song with the lower running order will be listed first.
+                 */
+                if (a.points === b.points) {
+                    return a.order - b.order;
+                } else {
+                    return b.points - a.points;
+                }
+            },
         },
         created: function() {
             this.songs = _songs;
             this.votes = _votes;
-            this.orderSongs();
+            this.calculatePoints();
         },
         watch: {
             voted: function() {
-                this.setToVote(this.voted);
+                this.calculatePoints();
             }
         }
     }
 </script>
 
 <style scoped>
-    .nextButton {
+    .button {
         margin: 10px 10px 10px 0;
     }
 
