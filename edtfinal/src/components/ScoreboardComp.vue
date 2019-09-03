@@ -48,7 +48,9 @@
         name: "ScoreboardComp",
         components: {CurrentVoteComp, ScoreboardSongComp},
         data: () => ({
+            // => see data/songs.js
             songs: [],
+            // => see data/votes.js
             votes: [],
             scoreKey: [12, 10, 8, 7, 6, 5, 4, 3, 2, 1],
             voted: 0,
