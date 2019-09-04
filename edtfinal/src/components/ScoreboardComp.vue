@@ -20,11 +20,11 @@
             <v-flex xs4>
                 <CurrentVoteComp :vote="currentVote" :songs="songs" :scoreKey="scoreKey" v-on:next="nextVote"></CurrentVoteComp>
                 <div class="votingStatus">
-                    <div>{{voted}} of {{songCount}} redditors voting</div>
+                    <div>{{voted}} of {{voteCount}} redditors voting</div>
                     <v-slider
                         v-model="voted"
                         min="0"
-                        :max="songCount">
+                        :max="voteCount">
                     </v-slider>
                 </div>
                 <div>
@@ -59,6 +59,9 @@
             songCount: function() {
                 return this.songs.length;
             },
+            voteCount: function() {
+                return this.votes.length;
+            },
             scoreboardLeftHalf: function() {
                 return this.songs.slice(0, this.songCount / 2);
             },
@@ -72,7 +75,7 @@
         },
         methods: {
             nextVote: function() {
-                if (this.voted < this.songCount) {
+                if (this.voted < this.voteCount) {
                     this.voted++;
                 }
             },

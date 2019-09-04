@@ -1,8 +1,5 @@
 <template>
     <div>
-        <div class="vote elevation-10" @click="$emit('next')">
-            <span class="title">{{voteAuthor}}</span>
-        </div>
         <div class="vote elevation-10">
             <div class="title" v-for="i in 10">
                 <v-layout>
@@ -22,15 +19,6 @@
     export default {
         name: "CurrentVoteComp",
         props: ['vote', 'songs', 'scoreKey'],
-        computed: {
-            voteAuthor: function() {
-                if (this.vote) return this.vote[this.vote.length - 1];
-                else return 'Start the voting!';
-            },
-            votes: function() {
-                return this.vote.slice(0, this.vote.length - 1);
-            }
-        },
         methods: {
             renderSingleVote: function(i) {
                 if (this.vote) {
