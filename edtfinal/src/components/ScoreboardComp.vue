@@ -18,17 +18,19 @@
                 </ScoreboardSongComp>
             </v-flex>
             <v-flex xs4>
-                <CurrentVoteComp :vote="currentVote" :songs="songs" :scoreKey="scoreKey" v-on:next="nextVote"></CurrentVoteComp>
+                <CurrentVoteComp :vote="currentVote" :songs="songs" :scoreKey="scoreKey"
+                                 v-on:next="nextVote"></CurrentVoteComp>
                 <div class="votingStatus">
                     <div>{{voted}} of {{voteCount}} redditors voting</div>
                     <v-slider
-                        v-model="voted"
-                        min="0"
-                        :max="voteCount">
+                            v-model="voted"
+                            min="0"
+                            :max="voteCount">
                     </v-slider>
                 </div>
                 <div>
-                    <v-btn @click="nextVote" color="info" :disabled="voted === songCount" class="button">Next Vote</v-btn>
+                    <v-btn @click="nextVote" color="info" :disabled="voted === voteCount" class="button">Next Vote
+                    </v-btn>
                     <v-btn @click="lastVote" color="info" :disabled="voted === 0" class="button">Last Vote</v-btn>
                     <v-btn @click="reset" color="error" :disabled="voted === 0" class="button">Reset</v-btn>
                 </div>
@@ -56,38 +58,38 @@
             voted: 0,
         }),
         computed: {
-            songCount: function() {
+            songCount: function () {
                 return this.songs.length;
             },
-            voteCount: function() {
+            voteCount: function () {
                 return this.votes.length;
             },
-            scoreboardLeftHalf: function() {
+            scoreboardLeftHalf: function () {
                 return this.songs.slice(0, this.songCount / 2);
             },
-            scoreboardRightHalf: function() {
+            scoreboardRightHalf: function () {
                 return this.songs.slice(this.songCount / 2);
             },
-            currentVote: function() {
+            currentVote: function () {
                 if (this.voted === 0) return null;
                 else return this.votes[this.voted - 1];
             }
         },
         methods: {
-            nextVote: function() {
+            nextVote: function () {
                 if (this.voted < this.voteCount) {
                     this.voted++;
                 }
             },
-            lastVote: function() {
+            lastVote: function () {
                 if (this.voted > 0) {
                     this.voted--;
                 }
             },
-            reset: function() {
+            reset: function () {
                 this.voted = 0;
             },
-            calculatePoints: function() {
+            calculatePoints: function () {
                 for (const song of this.songs) {
                     song.points = 0;
                 }
@@ -100,10 +102,10 @@
                 }
                 this.orderSongs();
             },
-            orderSongs: function() {
+            orderSongs: function () {
                 this.songs.sort(this.compareSongs);
             },
-            compareSongs: function(a, b) {
+            compareSongs: function (a, b) {
                 /*
                     Order songs in descending order by their score.
                     If two songs have the same score, the song with the lower running order will be listed first.
@@ -114,14 +116,23 @@
                     return b.points - a.points;
                 }
             },
+            shuffleArray: function (array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    const temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+            }
         },
-        created: function() {
+        created: function () {
             this.songs = _songs;
             this.votes = _votes;
+            // this.shuffleArray(this.votes);
             this.calculatePoints();
         },
         watch: {
-            voted: function() {
+            voted: function () {
                 this.calculatePoints();
             }
         }
